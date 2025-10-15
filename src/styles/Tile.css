@@ -29,3 +29,8 @@
     background-color: #3A3A3C;
     border: 0;
 }
+
+.current {
+    border: 1px solid white;
+    box-sizing: border-box;
+}
