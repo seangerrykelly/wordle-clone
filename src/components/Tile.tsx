@@ -3,7 +3,7 @@ import '../styles/Tile.css'
 
 type TileProps = {
     letter?: string
-    type?: 'correct' | 'present' | 'absent'
+    type?: 'correct' | 'present' | 'absent' | 'current'
 }
 
 export const Tile = ({ letter, type }: TileProps) => {

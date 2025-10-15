@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './App.css'
 import { Board } from './components/Board'
 import { Keyboard } from './components/Keyboard'
@@ -7,21 +7,42 @@ function App() {
   const [guessCount, setGuessCount] = useState(0)
   const [currGuess, setCurrGuess] = useState('')
   const [guesses, setGuesses] = useState<Array<string>>(Array(6).fill(''))
-  const [secretWord, setSecretWord] = useState('react')
+  const [secretWord, setSecretWord] = useState<string>('react')
   const [isGameOver, setIsGameOver] = useState<boolean>(false)
+
+  /**
+   * Add event listener for tracking key presses if current focus is not the input
+   * Include currGuess as a dependency to avoid stale state issues in handler
+   */
+  useEffect(() => {
+    const keyDownListener = (event: KeyboardEvent) => handleKeyDown(event)
+    window.addEventListener('keydown', keyDownListener)
+    return () => window.removeEventListener('keydown', keyDownListener)
+  }, [currGuess, isGameOver])
+
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (event.code.startsWith('Key') && currGuess.length < 5) {
+      const currKey = event.code.slice(event.code.length - 1).toLowerCase()
+      handleKeyboardClick(currKey)
+    }  else if (event.code === 'Enter' && currGuess.length === 5) {
+      handleKeyboardClick('ENTER')
+    } else if (event.code === 'Backspace') {
+      handleKeyboardClick('DEL')
+    }
+  }
 
   const addNewGuess = () => {
     const guessesCopy = guesses
     guessesCopy[guessCount] = currGuess
     setGuesses(guessesCopy)
-    setGuessCount(guessCount + 1)
+    setGuessCount(guessCount => guessCount + 1)
     setCurrGuess('')
     if (guessCount >= 5) {
       setIsGameOver(true)
     }
   }
 
-  const submitGuess = (event: { preventDefault: () => void }) => {
+  const submitGuess = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     if (isGameOver) {
       return
@@ -29,31 +50,21 @@ function App() {
     addNewGuess()
   }
 
-  const updateGuess = (event: { target: { value: string } }) => {
-    // Update current guess
-    const currInput = event.target.value.toLowerCase()
-      // Allow only letters, max 5 characters
-    if (/^[a-zA-Z]{0,5}$/.test(currInput)) {
-      setCurrGuess(currInput);
-    }
-    // setCurrGuess(currInput)
-
-    // Update list of guesses
-    // const guessesCopy = guesses
-    // guessesCopy[guessCount] = currInput
-    // setGuesses(guessesCopy)
-  }
-
   const handleKeyboardClick = (letter: string) => {
+    if (isGameOver) {
+      return
+    }
+    
     if (letter == "ENTER" && currGuess.length == 5) {
       addNewGuess()
       return
     }
-    console.log('letter: ', letter)
+
     if (letter == "DEL") {
       setCurrGuess(currGuess.slice(0, currGuess.length - 1))
       return
     }
+
     if (currGuess.length >= 5) {
       return
     }
@@ -64,9 +75,8 @@ function App() {
     <>
       <h1>Wordle</h1>
       <div className="card">
-        <Board guesses={guesses} secretWord={secretWord}/>
+        <Board guesses={guesses} secretWord={secretWord} guessIndex={guessCount} currentGuess={currGuess}/>
         <form onSubmit={submitGuess}>
-          <input type="text" autoFocus value={currGuess} onChange={updateGuess} />
           <button disabled={isGameOver || currGuess.length < 5} type="submit">Guess</button>
         </form>
         <Keyboard handleClick={handleKeyboardClick}/>
