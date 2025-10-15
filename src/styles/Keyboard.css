@@ -1,0 +1,19 @@
+.keyboard-container {
+
+}
+
+.keyboard-row {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    padding: 4px;
+    width: 100%;
+}
+
+.keyboard-key {
+    background-color: #818384;
+    color: #F8F8F8;
+    font-weight: bold;
+    height: 58px;
+    width: auto;
+}

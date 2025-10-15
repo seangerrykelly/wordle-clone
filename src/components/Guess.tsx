@@ -1,0 +1,30 @@
+import { Tile } from "./Tile"
+import '../styles/Guess.css'
+
+type GuessProps = {
+    guess: string
+    secretWord: string
+}
+
+export const Guess = ({ guess, secretWord }: GuessProps) => {
+    const letters = guess.padEnd(5).slice(0,5).split('')
+
+
+    const renderTile = (letter: string, index: number) => {
+        if (secretWord.indexOf(letter) == index) {
+            return <Tile letter={letter} type='correct' />
+        } else if (secretWord.indexOf(letter) >= 0) {
+            return <Tile letter={letter} type='present' />
+        } else {
+            return <Tile letter={letter} type='absent' />
+        }
+    }
+
+    return (
+        <div className="guess">
+            {letters?.map((letter, index) => (
+                renderTile(letter, index)
+            ))}
+        </div>
+    )
+}
