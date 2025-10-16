@@ -3,6 +3,7 @@ import './App.css'
 import { Board } from './components/Board'
 import { Keyboard } from './components/Keyboard'
 import wordList from './data/five-letter-words.json'
+import { checkGuess } from './utils/checkGuess'
 
 function App() {
   const [guessCount, setGuessCount] = useState(0)
@@ -60,6 +61,7 @@ function App() {
     }
     
     if (letter == "ENTER" && currGuess.length == 5) {
+      checkGuess(currGuess, secretWord)
       addNewGuess()
       return
     }
