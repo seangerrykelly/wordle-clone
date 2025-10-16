@@ -24,10 +24,13 @@ function App() {
    * Include currGuess as a dependency to avoid stale state issues in handler
    */
   useEffect(() => {
+    if (isGameOver) {
+      return
+    }
     const keyDownListener = (event: KeyboardEvent) => handleKeyDown(event)
     window.addEventListener('keydown', keyDownListener)
     return () => window.removeEventListener('keydown', keyDownListener)
-  }, [currGuess])
+  }, [currGuess, isGameOver])
 
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.code.startsWith('Key') && currGuess.length < 5) {
@@ -45,18 +48,10 @@ function App() {
     guessesCopy[guessCount] = currGuess
     setGuesses(guessesCopy)
     setGuessCount(guessCount => guessCount + 1)
-    setCurrGuess('')
-    if (guessCount >= 5) {
+    if (guessCount >= 5 || currGuess === secretWord) {
       setIsGameOver(true)
     }
-  }
-
-  const submitGuess = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    if (isGameOver) {
-      return
-    }
-    addNewGuess()
+    setCurrGuess('')
   }
 
   const handleKeyboardClick = (letter: string) => {
@@ -85,9 +80,6 @@ function App() {
       <h1>Wordle</h1>
       <div className="card">
         <Board guesses={guesses} secretWord={secretWord} guessIndex={guessCount} currentGuess={currGuess}/>
-        <form onSubmit={submitGuess}>
-          <button disabled={isGameOver || currGuess.length < 5} type="submit">Guess</button>
-        </form>
         <Keyboard handleClick={handleKeyboardClick}/>
       </div>
     </>
