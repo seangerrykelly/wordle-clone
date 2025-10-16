@@ -1,0 +1,9 @@
+:root {
+    /* Guess colors */
+    --correct-letter-color: #538D4E;
+    --present-letter-color: #B59F3B;
+    --absent-letter-color: #3A3A3C;
+
+    /* Keyboard color */
+    --default-keyboard-color: #818384;
+}

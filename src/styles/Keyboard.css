@@ -1,6 +1,4 @@
-.keyboard-container {
-
-}
+@import 'colors.css';
 
 .keyboard-row {
     display: flex;
@@ -11,9 +9,30 @@
 }
 
 .keyboard-key {
-    background-color: #818384;
+    background-color: var(--default-keyboard-color);
+    border: 0;
     color: #F8F8F8;
     font-weight: bold;
     height: 58px;
     width: auto;
+}
+
+.correct-key {
+    background-color: var(--correct-letter-color);
+    border: 0;
+}
+
+.present-key {
+    background-color: var(--present-letter-color);
+    border: 0;
+}
+
+.absent-key {
+    background-color: var(--absent-letter-color);
+    border: 0;
+}
+
+.current-key {
+    border: 0;
+    box-sizing: border-box;
 }

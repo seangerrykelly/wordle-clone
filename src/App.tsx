@@ -13,12 +13,19 @@ function App() {
   const [secretWord, setSecretWord] = useState<string>('react')
   const [isGameOver, setIsGameOver] = useState<boolean>(false)
 
+  const [keyboardMap, setKeyboardMap] = useState<Map<string, GuessResult['type']>>(new Map<string, GuessResult['type']>)
+
   /**
    * Select random word from list on page load
    */
   useEffect(() => {
     const randomIndex = Math.floor(Math.random() * wordList.length)
     setSecretWord(wordList[randomIndex])
+
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    for (let i = 0; i < alphabet.length; i++) {
+      keyboardMap?.set(alphabet[i], 'current')
+    }
   }, [])
 
   /**
@@ -46,7 +53,6 @@ function App() {
   }
 
   const addNewGuess = (guessResult: Map<number, GuessResult>) => {
-
     const guessResultsCopy = guessResults
     guessResultsCopy[guessCount] = guessResult
     setGuessResults(guessResultsCopy)
@@ -54,11 +60,28 @@ function App() {
     const guessesCopy = guesses
     guessesCopy[guessCount] = currGuess
     setGuesses(guessesCopy)
+
     setGuessCount(guessCount => guessCount + 1)
     if (guessCount >= 5 || currGuess === secretWord) {
       setIsGameOver(true)
     }
     setCurrGuess('')
+  }
+
+  const updateKeyboardMap = (guessResult: Map<number, GuessResult>) => {
+    const keyboardMapCopy = keyboardMap
+    for (let i = 0; i < currGuess.length; i++) {
+      const letterResult = guessResult.get(i)
+      const currLetter = currGuess[i].toUpperCase()
+      if (letterResult) {
+        if (keyboardMapCopy?.get(currLetter) === 'correct') {
+          continue
+        } else {
+          keyboardMapCopy?.set(currLetter, letterResult.type)
+        }
+      }
+    }
+    setKeyboardMap(keyboardMapCopy)
   }
 
   const handleKeyboardClick = (letter: string) => {
@@ -68,6 +91,8 @@ function App() {
     
     if (letter == "ENTER" && currGuess.length == 5) {
       const guessResult = checkGuess(currGuess, secretWord)
+      updateKeyboardMap(guessResult)
+
       addNewGuess(guessResult)
       return
     }
@@ -93,7 +118,10 @@ function App() {
           currentGuess={currGuess}
           guessResults={guessResults}
         />
-        <Keyboard handleClick={handleKeyboardClick}/>
+        <Keyboard 
+          handleClick={handleKeyboardClick}
+          keyboardMap={keyboardMap}
+        />
       </div>
     </>
   )

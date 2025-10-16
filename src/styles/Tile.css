@@ -1,3 +1,5 @@
+@import 'colors.css';
+
 .tile {
     align-items: center;
     aspect-ratio: 1 / 1;
@@ -16,17 +18,17 @@
 }
 
 .correct {
-    background-color: #538D4E;
+    background-color: var(--correct-letter-color);
     border: 0;
 }
 
 .present {
-    background-color: #B59F3B;
+    background-color: var(--present-letter-color);
     border: 0;
 }
 
 .absent {
-    background-color: #3A3A3C;
+    background-color: var(--absent-letter-color);
     border: 0;
 }
 
