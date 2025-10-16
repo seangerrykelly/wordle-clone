@@ -16,7 +16,7 @@ function App() {
    */
   useEffect(() => {
     const randomIndex = Math.floor(Math.random() * wordList.length)
-    setSecretWord(wordList[randomIndex].toLowerCase())
+    setSecretWord(wordList[randomIndex])
   }, [])
 
   /**
