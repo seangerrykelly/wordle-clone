@@ -1,4 +1,4 @@
-type GuessResult = {
+export type GuessResult = {
     index: number
     type: 'correct' | 'present' | 'absent' | 'current'
 }
@@ -11,7 +11,7 @@ type GuessResult = {
 */
 
 export const checkGuess = (guess: string, secretWord: string) => {
-    const answer = new Map<number, GuessResult>()
+    const guessMap = new Map<number, GuessResult>()
     const secretWordMap = new Map<string, number>()
     for (let i = 0; i < secretWord.length; i++) {
         const currLetter = secretWord[i]
@@ -30,10 +30,10 @@ export const checkGuess = (guess: string, secretWord: string) => {
         if (currLetter === secretWord[i]) {
             guessResult.index = i
             guessResult.type = 'correct'
-            answer.set(i, guessResult)
+            guessMap.set(i, guessResult)
             secretWordMap.set(currLetter, secretWordMap.get(currLetter)! - 1)
         } else if (!secretWord.includes(currLetter)) {
-            answer.set(i, guessResult)
+            guessMap.set(i, guessResult)
         }
     }
 
@@ -41,15 +41,16 @@ export const checkGuess = (guess: string, secretWord: string) => {
     for (let i = 0; i < guess.length; i++) {
         const currLetter = guess[i]
         const guessResult: GuessResult = { index: i, type: 'present' }
-        if (answer.has(i)) {
+        if (guessMap.has(i)) {
             continue
         } else if (secretWord.includes(currLetter) && secretWordMap.get(currLetter)! > 0) {
-            answer.set(i, guessResult)
+            guessMap.set(i, guessResult)
             secretWordMap.set(currLetter, secretWordMap.get(currLetter)! - 1)
         } else {
             guessResult.type = 'absent'
-            answer.set(i, guessResult)
+            guessMap.set(i, guessResult)
         }
     }
 
+    return guessMap
 }

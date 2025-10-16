@@ -1,16 +1,17 @@
 import { Tile } from "./Tile"
 import '../styles/Guess.css'
+import type { GuessResult } from "../utils/checkGuess"
 
 type GuessProps = {
     guess: string
-    secretWord: string
     isCurrentGuess: boolean
+    guessResult: Map<number, GuessResult>
 }
 
-export const Guess = ({ guess, secretWord, isCurrentGuess = false }: GuessProps) => {
+export const Guess = ({ guess, isCurrentGuess = false, guessResult }: GuessProps) => {
     const letters = guess.padEnd(5).slice(0,5).split('')
 
-    const renderTile = (letter: string, index: number) => {
+    const renderTile = (letter: string, guessResult: GuessResult) => {
         if (isCurrentGuess) {
             if (/^[a-zA-Z]{0,5}$/.test(letter)) {
                 return <Tile letter={letter} type='current' />
@@ -18,10 +19,9 @@ export const Guess = ({ guess, secretWord, isCurrentGuess = false }: GuessProps)
                 return <Tile letter={letter} type='absent' />
             }
         }
-        if (secretWord.indexOf(letter) == index) {
-            return <Tile letter={letter} type='correct' />
-        } else if (secretWord.indexOf(letter) >= 0) {
-            return <Tile letter={letter} type='present' />
+
+        if (guessResult) {
+            return <Tile letter={letter} type={guessResult.type} />
         } else {
             return <Tile letter={letter} type='absent' />
         }
@@ -30,7 +30,7 @@ export const Guess = ({ guess, secretWord, isCurrentGuess = false }: GuessProps)
     return (
         <div className="guess">
             {letters?.map((letter, index) => (
-                renderTile(letter, index)
+                renderTile(letter, guessResult.get(index)!)
             ))}
         </div>
     )
