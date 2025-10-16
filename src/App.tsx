@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import './App.css'
 import { Board } from './components/Board'
 import { Keyboard } from './components/Keyboard'
+import wordList from './data/five-letter-words.json'
 
 function App() {
   const [guessCount, setGuessCount] = useState(0)
@@ -11,6 +12,14 @@ function App() {
   const [isGameOver, setIsGameOver] = useState<boolean>(false)
 
   /**
+   * Select random word from list on page load
+   */
+  useEffect(() => {
+    const randomIndex = Math.floor(Math.random() * wordList.length)
+    setSecretWord(wordList[randomIndex])
+  }, [])
+
+  /**
    * Add event listener for tracking key presses if current focus is not the input
    * Include currGuess as a dependency to avoid stale state issues in handler
    */
@@ -18,7 +27,7 @@ function App() {
     const keyDownListener = (event: KeyboardEvent) => handleKeyDown(event)
     window.addEventListener('keydown', keyDownListener)
     return () => window.removeEventListener('keydown', keyDownListener)
-  }, [currGuess, isGameOver])
+  }, [currGuess])
 
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.code.startsWith('Key') && currGuess.length < 5) {
