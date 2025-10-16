@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
 import { Board } from './components/Board'
 import { Keyboard } from './components/Keyboard'
 import wordList from './data/five-letter-words.json'
+import { checkGuess, type GuessResult } from './utils/checkGuess'
 
 function App() {
   const [guessCount, setGuessCount] = useState(0)
   const [currGuess, setCurrGuess] = useState('')
   const [guesses, setGuesses] = useState<Array<string>>(Array(6).fill(''))
+  const [guessResults, setGuessResults] = useState<Array<Map<number, GuessResult>>>(Array(6).fill(new Map<number, GuessResult>))
   const [secretWord, setSecretWord] = useState<string>('react')
   const [isGameOver, setIsGameOver] = useState<boolean>(false)
 
@@ -43,7 +45,12 @@ function App() {
     }
   }
 
-  const addNewGuess = () => {
+  const addNewGuess = (guessResult: Map<number, GuessResult>) => {
+
+    const guessResultsCopy = guessResults
+    guessResultsCopy[guessCount] = guessResult
+    setGuessResults(guessResultsCopy)
+
     const guessesCopy = guesses
     guessesCopy[guessCount] = currGuess
     setGuesses(guessesCopy)
@@ -60,7 +67,8 @@ function App() {
     }
     
     if (letter == "ENTER" && currGuess.length == 5) {
-      addNewGuess()
+      const guessResult = checkGuess(currGuess, secretWord)
+      addNewGuess(guessResult)
       return
     }
 
@@ -79,7 +87,12 @@ function App() {
     <>
       <h1>Wordle</h1>
       <div className="card">
-        <Board guesses={guesses} secretWord={secretWord} guessIndex={guessCount} currentGuess={currGuess}/>
+        <Board 
+          guesses={guesses} 
+          guessIndex={guessCount} 
+          currentGuess={currGuess}
+          guessResults={guessResults}
+        />
         <Keyboard handleClick={handleKeyboardClick}/>
       </div>
     </>
