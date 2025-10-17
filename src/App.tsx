@@ -4,6 +4,7 @@ import { Board } from './components/Board'
 import { Keyboard } from './components/Keyboard'
 import wordList from './data/five-letter-words.json'
 import { checkGuess, checkGuessValidity, ValidGuessResponses, type GuessResult } from './utils/checkGuess'
+import { ErrorMessage } from './components/ErrorMessage'
 
 function App() {
   const [guessCount, setGuessCount] = useState(0)
@@ -132,7 +133,7 @@ function App() {
     <>
       <h1>Wordle</h1>
       <div className="card">
-        {hasError && <div style={{color: 'red', fontSize: '48px'}}>{errorMessage}</div>}
+        {hasError && <ErrorMessage message={errorMessage} />}
         <Board 
           guesses={guesses} 
           guessIndex={guessCount} 
