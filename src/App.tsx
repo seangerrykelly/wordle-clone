@@ -26,7 +26,7 @@ function App() {
     }
     const resetHasError = setTimeout(() => {
         setHasError(false)
-    }, 2000)
+    }, 1000)
 
     return () => clearTimeout(resetHasError)
   }, [hasError])
@@ -139,6 +139,7 @@ function App() {
           guessIndex={guessCount} 
           currentGuess={currGuess}
           guessResults={guessResults}
+          hasError={hasError}
         />
         <Keyboard 
           handleClick={handleKeyboardClick}
