@@ -1,15 +1,32 @@
+import wordList from '../data/five-letter-words.json'
+
 export type GuessResult = {
     index: number
     type: 'correct' | 'present' | 'absent' | 'current'
 }
 
-/*
-    If letter is in the correct spot, return green
-    If letter is not in the correct spot, return yellow
-    If letter is not in the word, return grey
-    If letter is in the word, but letter was already used prior, return grey
-*/
+export enum ValidGuessResponses {
+    VALID = 'Valid guess',
+    NOT_ENOUGH_LETTERS = 'Not enough letters',
+    NOT_IN_WORD_LIST = 'Not in word list'
+}
 
+export const checkGuessValidity = (guess: string) => {
+    if (wordList.includes(guess) && guess.length === 5) {
+        return ValidGuessResponses.VALID
+    } else if (guess.length < 5) {
+        return ValidGuessResponses.NOT_ENOUGH_LETTERS
+    } else {
+        return ValidGuessResponses.NOT_IN_WORD_LIST
+    }
+}
+
+/*
+    If letter is in the correct spot, return correct
+    If letter is not in the correct spot, return present
+    If letter is not in the word, return absent
+    If letter is in the word, but letter was already used prior, return absent
+*/
 export const checkGuess = (guess: string, secretWord: string) => {
     const guessMap = new Map<number, GuessResult>()
     const secretWordMap = new Map<string, number>()
