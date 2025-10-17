@@ -3,12 +3,37 @@
 .tile {
     align-items: center;
     aspect-ratio: 1 / 1;
-    border: 2px solid #3A3A3C;
+    border: 0;
+    background-color: transparent;
     display: flex;
     justify-content: center;
     max-width: 60px;
     min-width: 50px;
     text-transform: uppercase;
+}
+
+.tile-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.5s ease;
+    transform-style: preserve-3d;
+}
+
+.tile-flipped .tile-inner {
+    transform: rotateX(180deg);
+}
+
+.tile-front, .tile-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+.tile-back {
+    transform: rotateX(180deg);
 }
 
 .tile-letter {
