@@ -7,9 +7,10 @@ type BoardProps = {
     guessIndex: number
     currentGuess: string
     guessResults: Array<Map<number, GuessResult>>
+    hasError: boolean
 }
 
-export const Board = ({ guesses, guessIndex, currentGuess, guessResults}: BoardProps) => {
+export const Board = ({ guesses, guessIndex, currentGuess, guessResults, hasError}: BoardProps) => {
     
     return (
         <div className="board">
@@ -19,6 +20,7 @@ export const Board = ({ guesses, guessIndex, currentGuess, guessResults}: BoardP
                     guess={index === guessIndex ? currentGuess: guesses[index]}
                     guessResult={guess}
                     isCurrentGuess={index === guessIndex}
+                    hasError={hasError}
                 />
             ))}
         </div>

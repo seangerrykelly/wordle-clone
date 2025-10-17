@@ -3,7 +3,8 @@ import './App.css'
 import { Board } from './components/Board'
 import { Keyboard } from './components/Keyboard'
 import wordList from './data/five-letter-words.json'
-import { checkGuess, type GuessResult } from './utils/checkGuess'
+import { checkGuess, checkGuessValidity, ValidGuessResponses, type GuessResult } from './utils/checkGuess'
+import { ErrorMessage } from './components/ErrorMessage'
 
 function App() {
   const [guessCount, setGuessCount] = useState(0)
@@ -11,9 +12,24 @@ function App() {
   const [guesses, setGuesses] = useState<Array<string>>(Array(6).fill(''))
   const [guessResults, setGuessResults] = useState<Array<Map<number, GuessResult>>>(Array(6).fill(new Map<number, GuessResult>))
   const [secretWord, setSecretWord] = useState<string>('react')
+
   const [isGameOver, setIsGameOver] = useState<boolean>(false)
+  const [hasError, setHasError] = useState<boolean>(false)
+  const [errorMessage, setErrorMessage] = useState<string>('')
 
   const [keyboardMap, setKeyboardMap] = useState<Map<string, GuessResult['type']>>(new Map<string, GuessResult['type']>)
+
+  // Reset error state after 2 seconds. This is used for the shaking animation when an invalid word is guessed.
+  useEffect(() => {
+    if (!hasError) {
+      return
+    }
+    const resetHasError = setTimeout(() => {
+        setHasError(false)
+    }, 1000)
+
+    return () => clearTimeout(resetHasError)
+  }, [hasError])
 
   /**
    * Select random word from list on page load
@@ -45,7 +61,7 @@ function App() {
     if (event.code.startsWith('Key') && currGuess.length < 5) {
       const currKey = event.code.slice(event.code.length - 1).toLowerCase()
       handleKeyboardClick(currKey)
-    }  else if (event.code === 'Enter' && currGuess.length === 5) {
+    }  else if (event.code === 'Enter') {
       handleKeyboardClick('ENTER')
     } else if (event.code === 'Backspace') {
       handleKeyboardClick('DEL')
@@ -89,11 +105,16 @@ function App() {
       return
     }
     
-    if (letter == "ENTER" && currGuess.length == 5) {
-      const guessResult = checkGuess(currGuess, secretWord)
-      updateKeyboardMap(guessResult)
-
-      addNewGuess(guessResult)
+    if (letter == "ENTER") {
+      const guessValidity = checkGuessValidity(currGuess)
+      if (guessValidity === ValidGuessResponses.VALID) {      
+        const guessResult = checkGuess(currGuess, secretWord)
+        updateKeyboardMap(guessResult)
+        addNewGuess(guessResult)
+        return
+      }
+      setHasError(true)
+      setErrorMessage(guessValidity)
       return
     }
 
@@ -112,11 +133,13 @@ function App() {
     <>
       <h1>Wordle</h1>
       <div className="card">
+        {hasError && <ErrorMessage message={errorMessage} />}
         <Board 
           guesses={guesses} 
           guessIndex={guessCount} 
           currentGuess={currGuess}
           guessResults={guessResults}
+          hasError={hasError}
         />
         <Keyboard 
           handleClick={handleKeyboardClick}
