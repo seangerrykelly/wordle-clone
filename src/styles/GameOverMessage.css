@@ -1,0 +1,9 @@
+.gameOverMessage {
+    position: absolute;
+    background-color: #f8f8f8;
+    border-radius: 8px;
+    color: #121213;
+    padding: 8px;
+    top: -12px;
+    font-weight: 600;
+}

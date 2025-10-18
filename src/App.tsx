@@ -3,8 +3,9 @@ import './App.css'
 import { Board } from './components/Board'
 import { Keyboard } from './components/Keyboard'
 import wordList from './data/five-letter-words.json'
-import { checkGuess, checkGuessValidity, ValidGuessResponses, type GuessResult } from './utils/checkGuess'
+import { checkGuess, checkGuessValidity, GAME_OVER_MESSAGES, ValidGuessResponses, type GuessResult } from './utils/checkGuess'
 import { ErrorMessage } from './components/ErrorMessage'
+import { GameOverMessage } from './components/GameOverMessage'
 
 function App() {
   const [guessCount, setGuessCount] = useState(0)
@@ -16,10 +17,13 @@ function App() {
   const [isGameOver, setIsGameOver] = useState<boolean>(false)
   const [hasError, setHasError] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string>('')
+  const [showGameOverMessage, setShowGameOverMessage] = useState<boolean>(false)
+  const [gameOverMessage, setGameOverMessage] = useState<string>('')
+  const [didUserWin, setDidUserWin] = useState<boolean>(false)
 
   const [keyboardMap, setKeyboardMap] = useState<Map<string, GuessResult['type']>>(new Map<string, GuessResult['type']>)
 
-  // Reset error state after 2 seconds. This is used for the shaking animation when an invalid word is guessed.
+  // Reset error state after 1 second. This is used for the shaking animation when an invalid word is guessed.
   useEffect(() => {
     if (!hasError) {
       return
@@ -30,6 +34,19 @@ function App() {
 
     return () => clearTimeout(resetHasError)
   }, [hasError])
+
+  useEffect(() => {
+    if (!showGameOverMessage) {
+      return
+    }
+    const resetShowGameOverMessage = setTimeout(() => {
+        if (didUserWin){
+          setShowGameOverMessage(false)
+        }
+    }, 2000)
+
+    return () => clearTimeout(resetShowGameOverMessage)
+  }, [showGameOverMessage])
 
   /**
    * Select random word from list on page load
@@ -79,8 +96,11 @@ function App() {
 
     setGuessCount(guessCount => guessCount + 1)
     if (guessCount >= 5 || currGuess === secretWord) {
+      setShowGameOverMessage(true)
+      setGameOverMessage(currGuess === secretWord ? GAME_OVER_MESSAGES.get(guessCount)! : secretWord.toUpperCase())
       setIsGameOver(true)
     }
+    setDidUserWin(currGuess === secretWord)
     setCurrGuess('')
   }
 
@@ -93,6 +113,10 @@ function App() {
         if (keyboardMapCopy?.get(currLetter) === 'correct') {
           continue
         } else {
+          // If letter is already yellow, don't set it to grey
+          if (keyboardMapCopy?.get(currLetter) === 'present' && letterResult.type === 'absent') {
+            continue
+          }
           keyboardMapCopy?.set(currLetter, letterResult.type)
         }
       }
@@ -134,6 +158,7 @@ function App() {
       <h1>Wordle</h1>
       <div className="card">
         {hasError && <ErrorMessage message={errorMessage} />}
+        {showGameOverMessage && <GameOverMessage message={gameOverMessage} />}
         <Board 
           guesses={guesses} 
           guessIndex={guessCount} 
