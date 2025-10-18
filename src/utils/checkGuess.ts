@@ -11,6 +11,15 @@ export enum ValidGuessResponses {
     NOT_IN_WORD_LIST = 'Not in word list'
 }
 
+export const GAME_OVER_MESSAGES: Map<number, string> = new Map<number, string>([
+    [1, 'Genius'],
+    [2, 'Magnificent'],
+    [3, 'Impressive'],
+    [4, 'Splendid'],
+    [5, 'Great'],
+    [6, 'Phew'],
+])
+
 export const checkGuessValidity = (guess: string) => {
     if (wordList.includes(guess) && guess.length === 5) {
         return ValidGuessResponses.VALID
