@@ -1,21 +1,53 @@
 @import 'colors.css';
 
+.keyboard-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    min-width: 100vw; /* keeps it centered and constrained */
+    width: 100%;
+    padding: 8px;
+}
+
 .keyboard-row {
     display: flex;
-    gap: 8px;
     justify-content: center;
-    padding: 4px;
+    gap: 6px;
     width: 100%;
+    margin-bottom: 6px;
 }
 
 .keyboard-key {
     background-color: var(--default-keyboard-color);
-    border: 0;
+    border: none;
+    border-radius: 4px;
     color: #F8F8F8;
     font-weight: bold;
+    max-width: 43px; /* roughly Wordle’s button width */
+    min-width: min-content;
     height: 58px;
-    width: auto;
-    transition: background-color 0.5s linear;
+    text-align: center;
+    font-size: 1rem;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+/* Responsive scaling */
+@media (max-width: 600px) {
+    .keyboard-key {
+        max-width: 36px;
+        height: 48px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .keyboard-key {
+        max-width: 30px;
+        height: 42px;
+        font-size: 0.8rem;
+    }
 }
 
 .correct-key {

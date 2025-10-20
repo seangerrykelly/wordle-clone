@@ -14,7 +14,7 @@ export const Keyboard = ({ handleClick, keyboardMap }: KeyboardProps) => {
     ])
 
     return (
-        <div>
+        <div className="keyboard-container">
             {Array.from(keyboardRows.entries()).map(([rowNumber, letters]) => (
                 <div key={rowNumber} className="keyboard-row">
                     {letters.map((letter) => (
