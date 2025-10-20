@@ -155,7 +155,6 @@ function App() {
 
   return (
     <>
-      <h1>Wordle</h1>
       <div className="card">
         {hasError && <ErrorMessage message={errorMessage} />}
         {showGameOverMessage && <GameOverMessage message={gameOverMessage} />}
