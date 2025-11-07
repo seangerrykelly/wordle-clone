@@ -20,7 +20,9 @@ export const Keyboard = ({ handleClick, keyboardMap }: KeyboardProps) => {
                     {letters.map((letter) => (
                         <button 
                             key={letter} 
-                            className={`keyboard-key ${keyboardMap.get(letter)}-key`}
+                            className={`keyboard-key 
+                                ${letter === 'ENTER' || letter === 'DEL' ? 'wide' : ''} 
+                                ${keyboardMap.get(letter)}-key`}
                             onClick={() => handleClick(letter)}>
                             {letter}
                         </button>

@@ -1,36 +1,47 @@
 @import 'colors.css';
 
 .keyboard-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto;
-    min-width: 100vw; /* keeps it centered and constrained */
-    width: 100%;
-    padding: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  max-width: 100%;
+  padding: 8px 0;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .keyboard-row {
-    display: flex;
-    justify-content: center;
-    gap: 6px;
-    width: 100%;
-    margin-bottom: 6px;
+  display: flex;
+  justify-content: center;
+  gap: clamp(2px, 1vw, 6px); /* scales with screen width */
+  width: 100%;
+  margin-bottom: clamp(2px, 1vw, 6px);
+  box-sizing: border-box;
+  flex-wrap: nowrap; /* keep row on one line */
 }
 
 .keyboard-key {
-    background-color: var(--default-keyboard-color);
-    border: none;
-    border-radius: 4px;
-    color: #F8F8F8;
-    font-weight: bold;
-    max-width: 43px; /* roughly Wordle’s button width */
-    min-width: min-content;
-    height: 58px;
-    text-align: center;
-    font-size: 1rem;
-    transition: background-color 0.2s ease, transform 0.1s ease;
+  flex: 1 1 auto; /* shrink/grow */
+  min-width: fit-content; /* ensures Enter/Del always show their label */
+  max-width: clamp(28px, 7vw, 43px); /* regular keys shrink on mobile */
+  height: clamp(36px, 9vw, 58px);
+  background-color: var(--default-keyboard-color);
+  border: none;
+  border-radius: 4px;
+  color: #F8F8F8;
+  font-weight: bold;
+  text-align: center;
+  font-size: clamp(0.8rem, 2.5vw, 1rem);
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  box-sizing: border-box;
+  padding: 0 8px; /* some horizontal padding for wider keys */
+}
+
+.keyboard-key.wide { 
+  flex: 2 1 auto; /* double the space of normal keys */
 }
 
 /* Responsive scaling */

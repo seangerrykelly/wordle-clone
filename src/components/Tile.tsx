@@ -5,7 +5,7 @@ type TileProps = {
     letter?: string
     index: number
     isFlipping: boolean
-    type?: 'correct' | 'present' | 'absent' | 'current'
+    type?: 'correct' | 'present' | 'absent' | 'current' | 'empty'
 }
 
 export const Tile = ({ letter, index, isFlipping = false, type }: TileProps) => {
@@ -15,7 +15,7 @@ export const Tile = ({ letter, index, isFlipping = false, type }: TileProps) => 
                 className='tile-inner' 
                 style={{ transitionDelay: `${index * 200}ms`}}
             >
-                <div className={`tile-front ${type === 'current' || type === 'absent' ? type : ''}`}>
+                <div className={`tile-front ${type === 'current' || type === 'absent' ? type : 'empty'}`}>
                     <p className="tile-letter">
                         {letter}
                     </p>

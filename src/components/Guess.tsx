@@ -17,14 +17,14 @@ export const Guess = ({ guess, isCurrentGuess = false, guessResult, hasError = f
             if (/^[a-zA-Z]{0,5}$/.test(letter)) {
                 return <Tile letter={letter} type='current' isFlipping={false} index={index}/>
             } else {
-                return <Tile letter={letter} type='absent' isFlipping={false}  index={index}/>
+                return <Tile letter={letter} type='empty' isFlipping={false}  index={index}/>
             }
         }
 
         if (guessResult) {
             return <Tile letter={letter} type={guessResult.type} isFlipping={true}  index={index}/>
         } else {
-            return <Tile letter={letter} type='absent' isFlipping={false} index={index}/>
+            return <Tile letter={letter} type='empty' isFlipping={false} index={index}/>
         }
     }
 

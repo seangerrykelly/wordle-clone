@@ -97,7 +97,7 @@ function App() {
     setGuessCount(guessCount => guessCount + 1)
     if (guessCount >= 5 || currGuess === secretWord) {
       setShowGameOverMessage(true)
-      setGameOverMessage(currGuess === secretWord ? GAME_OVER_MESSAGES.get(guessCount)! : secretWord.toUpperCase())
+      setGameOverMessage(currGuess === secretWord ? GAME_OVER_MESSAGES.get(guessCount + 1)! : secretWord.toUpperCase())
       setIsGameOver(true)
     }
     setDidUserWin(currGuess === secretWord)
@@ -154,7 +154,7 @@ function App() {
   }
 
   return (
-    <>
+    <div className="container">
       <div className="card">
         {hasError && <ErrorMessage message={errorMessage} />}
         {showGameOverMessage && <GameOverMessage message={gameOverMessage} />}
@@ -165,12 +165,14 @@ function App() {
           guessResults={guessResults}
           hasError={hasError}
         />
+      </div>
+      <div className="keyboardContainer">
         <Keyboard 
           handleClick={handleKeyboardClick}
           keyboardMap={keyboardMap}
         />
       </div>
-    </>
+    </div>
   )
 }
 

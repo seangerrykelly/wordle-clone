@@ -10,6 +10,7 @@
     max-width: 60px;
     min-width: 50px;
     text-transform: uppercase;
+    box-sizing: border-box;
 }
 
 .tile-inner {
@@ -59,5 +60,11 @@
 
 .current {
     border: 1px solid white;
+    box-sizing: border-box;
+}
+
+.empty {
+    border: 2px solid var(--absent-letter-color);
+    background-color: transparent;
     box-sizing: border-box;
 }
